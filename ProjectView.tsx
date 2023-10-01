@@ -1,8 +1,14 @@
+import { StrictMode } from "react";
 import { ItemView, WorkspaceLeaf } from "obsidian";
+import { Root, createRoot } from "react-dom/client";
+import { ReactView } from "ReactView";
+import * as React from "react";
 
 export const VIEW_TYPE_PROJECTS_DASHBOARD = "projects-dashboard-view";
 
 export class ProjectsDashboardView extends ItemView {
+	root: Root | null = null;
+
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);
 	}
@@ -16,12 +22,16 @@ export class ProjectsDashboardView extends ItemView {
 	}
 
 	async onOpen() {
-		const container = this.containerEl.children[1];
-		container.empty();
-		container.createEl("h4", { text: "Example view" });
+		console.log('call on Open');
+		this.root = createRoot(this.containerEl.children[1]);
+		this.root.render(
+			<StrictMode>
+				<ReactView />
+			</StrictMode>
+		);
 	}
 
 	async onClose() {
-		// Nothing to clean up.
+		this.root?.unmount();
 	}
 }
